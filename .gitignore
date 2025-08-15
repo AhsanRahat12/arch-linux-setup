@@ -1,0 +1,12 @@
+# Personal/sensitive files
+*.log
+*~
+.DS_Store
+
+# Backup files
+*.backup
+*.bak
+
+# Temporary files
+*.tmp
+*.temp
