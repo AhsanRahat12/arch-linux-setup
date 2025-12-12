@@ -1,0 +1,26 @@
+" Enable syntax highlighting
+syntax on
+
+" Enable file type detection
+filetype plugin indent on
+
+" Enable mouse support in all modes
+set mouse=a
+
+" Conceal markdown syntax for cleaner view
+set conceallevel=2
+
+" Show line numbers (optional but helpful)
+set number
+highlight LineNr ctermfg=240 guifg=#585858
+
+" Enable syntax highlighting inside code blocks
+let g:markdown_fenced_languages = ['html', 'python', 'bash', 'javascript', 'css', 'java', 'ruby', 'go', 'rust']
+
+" Spell Checker with a simple underline
+set spell
+set spelllang=en_us
+highlight SpellBad cterm=underline ctermbg=NONE ctermfg=red guisp=red
+
+" Use system clipboard as default register
+set clipboard=unnamedplus
