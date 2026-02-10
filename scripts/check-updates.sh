@@ -25,6 +25,9 @@ UPDATE_SUMMARY=""
 
     # System packages
     echo "System Packages (official repos)..."
+    # Sync the database first
+    sudo pacman -Sy > /dev/null 2>&1
+    # Now check for updates
     SYSTEM_UPDATES=$(pacman -Qu 2>/dev/null | grep -v "aur/")
     if [ -n "$SYSTEM_UPDATES" ]; then
         COUNT=$(echo "$SYSTEM_UPDATES" | wc -l)
@@ -39,92 +42,54 @@ UPDATE_SUMMARY=""
 
     # AUR packages
     echo "AUR Packages..."
-    AUR_UPDATES=$(paru -Qu 2>/dev/null | grep "aur/")
+    AUR_UPDATES=$(pacman -Qu 2>/dev/null | grep "aur/")
     if [ -n "$AUR_UPDATES" ]; then
         COUNT=$(echo "$AUR_UPDATES" | wc -l)
         echo "$AUR_UPDATES"
-        echo "→ To update: paru -Sua"
+        echo "→ To update: paru -Syu (or yay -Syu)"
         UPDATES_FOUND=true
-        UPDATE_SUMMARY+="📦 $COUNT AUR package(s)\n"
+        UPDATE_SUMMARY+="🔧 $COUNT AUR package(s)\n"
     else
-        echo "No AUR updates available"
+        echo "No updates available"
     fi
     echo ""
 
-    # Firmware
-    echo "Firmware updates..."
-    if command -v fwupdmgr &> /dev/null; then
-        fwupdmgr refresh &> /dev/null
-        FW_UPDATES=$(fwupdmgr get-updates 2>&1)
-        if echo "$FW_UPDATES" | grep -q "No updates available\|Devices with no available firmware"; then
-            echo "No firmware updates"
-        else
-            fwupdmgr get-updates
-            echo "→ To update: fwupdmgr update"
-            UPDATES_FOUND=true
-            UPDATE_SUMMARY+="🔧 Firmware updates available\n"
-        fi
+    # Firmware updates
+    echo "Firmware Updates..."
+    FIRMWARE_UPDATES=$(fwupdmgr get-updates 2>/dev/null)
+    if [ -n "$FIRMWARE_UPDATES" ] && ! echo "$FIRMWARE_UPDATES" | grep -q "No updates available"; then
+        echo "$FIRMWARE_UPDATES"
+        echo "→ To update: fwupdmgr update"
+        UPDATES_FOUND=true
+        UPDATE_SUMMARY+="⚡ Firmware updates available\n"
     else
-        echo "fwupd not installed"
+        echo "No updates available"
     fi
     echo ""
 
-    # Bootloader
-    echo "Bootloader (systemd-boot)..."
-    BOOTCTL_STATUS=$(sudo bootctl status 2>&1)
-    echo "$BOOTCTL_STATUS" | grep -E "Current:|Available:"
-    echo "→ To update: sudo bootctl update"
-    echo ""
-
-    # Flatpak
-    echo "Flatpak packages..."
+    # Flatpak updates (if installed)
     if command -v flatpak &> /dev/null; then
+        echo "Flatpak Packages..."
         FLATPAK_UPDATES=$(flatpak remote-ls --updates 2>/dev/null)
         if [ -n "$FLATPAK_UPDATES" ]; then
             COUNT=$(echo "$FLATPAK_UPDATES" | wc -l)
             echo "$FLATPAK_UPDATES"
             echo "→ To update: flatpak update"
             UPDATES_FOUND=true
-            UPDATE_SUMMARY+="📦 $COUNT Flatpak package(s)\n"
+            UPDATE_SUMMARY+="📱 $COUNT Flatpak package(s)\n"
         else
-            echo "No Flatpak updates"
+            echo "No updates available"
         fi
-    else
-        echo "Flatpak not installed"
+        echo ""
     fi
-    echo ""
-
-    # Orphaned packages
-    echo "Orphaned packages..."
-    ORPHANS=$(pacman -Qtdq 2>/dev/null)
-    if [ -n "$ORPHANS" ]; then
-        COUNT=$(echo "$ORPHANS" | wc -l)
-        echo "Found $COUNT orphaned package(s):"
-        echo "$ORPHANS"
-        echo "→ To remove: paru -Rns \$(pacman -Qtdq)"
-        UPDATES_FOUND=true
-        UPDATE_SUMMARY+="🗑️  $COUNT orphaned package(s)\n"
-    else
-        echo "No orphaned packages"
-    fi
-    echo ""
-
-    # Package cache
-    echo "Package cache..."
-    CACHE_SIZE=$(du -sh /var/cache/pacman/pkg/ 2>/dev/null | cut -f1)
-    echo "Cache size: $CACHE_SIZE"
-    echo "→ Clean old versions: sudo pacman -Sc"
-    echo ""
 
     echo "========================================="
-    echo "Check Complete"
-    echo "========================================="
 
-} > "$OUTPUT_FILE"
+} | tee "$OUTPUT_FILE"
 
-# Send notification
+# Send notification if updates were found
 if [ "$UPDATES_FOUND" = true ]; then
-    send_notification "Updates Available" "$(echo -e $UPDATE_SUMMARY)Press Super+U to view details"
+    send_notification "Updates Available" "$(echo -e "$UPDATE_SUMMARY")\n\nCheck $OUTPUT_FILE for details"
 else
     send_notification "System Up to Date" "No updates available"
 fi
