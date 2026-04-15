@@ -184,7 +184,7 @@ bash /backup/restic/restic-home-backup
 restic restore latest --target /tmp/restore --include /path/to/file
 ```
 
-**Scripts:** See [`scripts/backup/`](scripts/backup/) for implementation.
+**Scripts:** See [`scripts/`](scripts/) for implementation.
 
 ---
 
