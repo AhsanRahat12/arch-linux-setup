@@ -1,6 +1,6 @@
 # My Arch Linux Build
 
-A complete bare-metal Arch Linux installation with encrypted LVM, Hyprland window manager, and custom theming. This repository documents my journey from a fresh install to a fully configured desktop environment.
+A complete bare-metal Arch Linux installation with encrypted LVM, Hyprland window manager, and automated backups.
 
 ## 🖥️ System Specifications
 
@@ -8,6 +8,7 @@ A complete bare-metal Arch Linux installation with encrypted LVM, Hyprland windo
 - **Storage**: NVMe SSD with full disk encryption (LUKS + LVM)
 - **Desktop Environment**: Hyprland (Wayland compositor)
 - **Theme**: Catppuccin-inspired with Typecraft dotfiles
+- **Backup**: Automated nightly backups to QNAP NAS via Restic
 
 ## 📸 Screenshots
 
@@ -65,38 +66,6 @@ A complete bare-metal Arch Linux installation with encrypted LVM, Hyprland windo
 - **Package Management**: Pacman + Paru (AUR helper)
 - **Backup Solution**: Restic with SFTP to QNAP NAS
 
-## 🔧 Configuration Files
-
-All configuration files are organized in the [`configs/`](configs/) directory:
-
-```
-configs/
-├── bash/           # Shell configuration and aliases
-├── vim/            # Vim editor configuration
-├── hypr/           # Hyprland configuration (with Wayland optimizations)
-├── waybar/         # Status bar configuration  
-├── kitty/          # Terminal configuration
-├── wofi/           # Application launcher
-├── hyprlock/       # Lock screen configuration
-└── starship/       # Shell prompt configuration
-```
-
-### Notable Configurations
-
-**Hyprland Wayland Optimizations**
-- Native Wayland support for Electron apps (VS Code, Obsidian, Discord)
-- Proper fractional scaling without blur
-- Environment variables configured for optimal display rendering
-
-**Shell Configuration**
-- Custom bash aliases for productivity
-- Efficient command shortcuts
-- Development workflow optimizations
-
-**Vim Setup**
-- Personalized vimrc for efficient text editing
-- Custom keybindings and settings
-
 ## 💡 Technical Notes
 
 ### Security
@@ -137,31 +106,6 @@ env = ELECTRON_OZONE_PLATFORM_HINT,wayland
 ```
 This bypasses XWayland compatibility layer and enables proper fractional scaling support.
 
-## 📚 Resources & Inspiration
-
-- [Arch Linux Wiki](https://wiki.archlinux.org/) - Comprehensive documentation
-- [Typecraft Dotfiles](https://github.com/typecraft-dev/dotfiles) - Configuration inspiration
-- [Catppuccin Theme](https://github.com/catppuccin/catppuccin) - Color scheme
-- [Hyprland Documentation](https://wiki.hyprland.org/) - Wayland compositor configuration
-- [Restic Documentation](https://restic.readthedocs.io/) - Backup solution
-
-## 🤝 About This Repository
-
-Personal documentation of an Arch Linux installation with Hyprland and automated backups.
-
-## 📦 Dotfiles Management
-
-> **Update**: Configs have migrated to a dedicated dotfiles system managed with [chezmoi](https://chezmoi.io) + [mise](https://mise.jdx.dev), replacing manual file copying.
-
-👉 **[github.com/AhsanRahat12/dotfiles](https://github.com/AhsanRahat12/dotfiles)**
-
-Bootstrap on any fresh machine with a single command:
-```bash
-sh -c "$(curl -fsLS get.chezmoi.io)" -- -b $HOME/.local/bin init --apply git@github.com:AhsanRahat12/dotfiles.git
-```
-
----
-
 ## 💾 Automated Backup System
 
 Encrypted backup solution using **Restic** with automated nightly backups to QNAP NAS:
@@ -185,6 +129,52 @@ restic restore latest --target /tmp/restore --include /path/to/file
 ```
 
 **Scripts:** See [`scripts/`](scripts/) for implementation.
+
+## 🔧 Configuration Files
+
+### Dotfiles Management
+
+Configs have migrated to a dedicated dotfiles system managed with [chezmoi](https://chezmoi.io) + [mise](https://mise.jdx.dev).
+
+👉 **[github.com/AhsanRahat12/dotfiles](https://github.com/AhsanRahat12/dotfiles)**
+
+Bootstrap on any fresh machine:
+```bash
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b $HOME/.local/bin init --apply git@github.com:AhsanRahat12/dotfiles.git
+```
+
+### Configuration Structure
+
+All configurations managed via dotfiles repository:
+
+```
+dotfiles/
+├── bash/           # Shell configuration and aliases
+├── vim/            # Vim editor configuration
+├── hypr/           # Hyprland configuration (with Wayland optimizations)
+├── waybar/         # Status bar configuration  
+├── kitty/          # Terminal configuration
+├── wofi/           # Application launcher
+├── hyprlock/       # Lock screen configuration
+└── starship/       # Shell prompt configuration
+```
+
+**Notable configurations:**
+- **Hyprland**: Native Wayland support for Electron apps, fractional scaling
+- **Shell**: Custom bash aliases and productivity shortcuts
+- **Vim**: Personalized vimrc with custom keybindings
+
+## 📚 Resources & Inspiration
+
+- [Arch Linux Wiki](https://wiki.archlinux.org/) - Comprehensive documentation
+- [Typecraft Dotfiles](https://github.com/typecraft-dev/dotfiles) - Configuration inspiration
+- [Catppuccin Theme](https://github.com/catppuccin/catppuccin) - Color scheme
+- [Hyprland Documentation](https://wiki.hyprland.org/) - Wayland compositor configuration
+- [Restic Documentation](https://restic.readthedocs.io/) - Backup solution
+
+## 🤝 About This Repository
+
+Personal documentation of an Arch Linux installation with Hyprland and automated backups.
 
 ---
 
