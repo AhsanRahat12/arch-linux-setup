@@ -1,27 +1,36 @@
 # My Arch Linux Build
+
 A complete bare-metal Arch Linux installation with encrypted LVM, Hyprland window manager, and custom theming. This repository documents my journey from a fresh install to a fully configured desktop environment.
+
 ## 🖥️ System Specifications
+
 - **Hardware**: Personal laptop (bare metal installation)
 - **Storage**: NVMe SSD with full disk encryption (LUKS + LVM)
 - **Desktop Environment**: Hyprland (Wayland compositor)
 - **Theme**: Catppuccin-inspired with Typecraft dotfiles
+
 ## 📸 Screenshots
+
 ### Base Installation
 ![Base Install](screenshots/Base_Setup.png)
+
 ### Final Desktop Setup
 | Background & Waybar | Terminal & Wofi |
 |---------------------|-----------------|
 | ![Background](screenshots/Background&Waybar.png) | ![Terminal](screenshots/Terminal&Wofi.png) |
+
 ## 🚀 Quick Overview
-This build demonstrates:
-- **Manual Arch installation** (no automated scripts)
-- **Full disk encryption** with LUKS + LVM
-- **Modern Wayland setup** with Hyprland
-- **Professional theming** and customization
-- **Native Wayland app support** with proper scaling
-- **AUR package management** with paru
-- **Comprehensive documentation** of the entire process
+
+- Manual Arch installation (no automated scripts)
+- Full disk encryption with LUKS + LVM
+- Hyprland window manager on Wayland
+- Catppuccin theming
+- Native Wayland app support with proper scaling
+- AUR package management with paru
+- Automated backup system with Restic to QNAP NAS
+
 ## 📋 Installation Guide
+
 ### Phase 1: Base System
 1. [**Creating Install Medium**](docs/01-install-medium.md) - ISO download and USB flashing
 2. [**Boot Process**](docs/02-booting.md) - BIOS setup and initial boot
@@ -31,14 +40,18 @@ This build demonstrates:
 6. [**Networking**](docs/06-networking.md) - systemd-networkd and wireless setup
 7. [**Boot Configuration**](docs/07-mkinitcpio.md) - initramfs with encryption hooks
 8. [**Bootloader**](docs/08-bootloader.md) - systemd-boot installation and configuration
+
 ### Phase 2: Desktop Environment
 9. [**First Boot**](docs/09-first-boot.md) - Initial system verification
 10. [**Hyprland Installation**](docs/10-hyprland.md) - Window manager and essential packages
 11. [**AUR Helper Setup**](docs/11-aur-helper.md) - Installing paru for AUR packages
 12. [**Desktop Components**](docs/12-finishing-touches.md) - Screenshots, notifications, lock screen
+
 ### Phase 3: Theming & Customization
 13. [**Visual Theming**](docs/13-theming.md) - Catppuccin theme implementation with dotfiles
+
 ## 🛠️ Key Technologies Used
+
 - **Encryption**: LUKS (dm-crypt) with passphrase authentication
 - **Volume Management**: LVM2 for flexible storage management
 - **Window Manager**: Hyprland (Wayland-based tiling compositor)
@@ -50,8 +63,12 @@ This build demonstrates:
 - **Shell**: Bash with custom configurations
 - **Editor**: Vim with personalized vimrc
 - **Package Management**: Pacman + Paru (AUR helper)
+- **Backup Solution**: Restic with SFTP to QNAP NAS
+
 ## 🔧 Configuration Files
+
 All configuration files are organized in the [`configs/`](configs/) directory:
+
 ```
 configs/
 ├── bash/           # Shell configuration and aliases
@@ -63,7 +80,9 @@ configs/
 ├── hyprlock/       # Lock screen configuration
 └── starship/       # Shell prompt configuration
 ```
+
 ### Notable Configurations
+
 **Hyprland Wayland Optimizations**
 - Native Wayland support for Electron apps (VS Code, Obsidian, Discord)
 - Proper fractional scaling without blur
@@ -77,61 +96,58 @@ configs/
 **Vim Setup**
 - Personalized vimrc for efficient text editing
 - Custom keybindings and settings
-## 💡 Key Learning Points
-### Security Considerations
-- **Full disk encryption** protects data at rest
-- **Separate boot partition** for UEFI compatibility
-- **LVM flexibility** allows for future storage expansion
-### System Architecture
-- **Wayland over X11** for modern display protocol
-- **Native Wayland rendering** eliminates XWayland scaling issues
-- **systemd services** for network management
-- **PipeWire** replaces older audio systems (ALSA/PulseAudio)
-### Display Server Deep Dive
-- Understanding XWayland compatibility layer limitations
-- Configuring native Wayland support for Electron applications
-- Solving fractional scaling blur through proper Ozone platform configuration
-- Environment variable tuning for optimal high-DPI display rendering
-### Development Workflow
-- **Manual installation** builds deep system understanding
-- **AUR integration** provides access to community packages
-- **Dotfiles management** ensures reproducible configurations
-- **Shell customization** enhances daily productivity
-## 🎯 Why This Build?
-This setup demonstrates several key technical skills:
-1. **System Administration**: Manual Arch installation shows deep Linux knowledge
-2. **Security Awareness**: Full disk encryption implementation
-3. **Modern Technologies**: Wayland, PipeWire, systemd adoption  
-4. **Display Server Expertise**: Native Wayland configuration and troubleshooting
-5. **Customization Skills**: Theming and dotfiles management
-6. **Documentation**: Clear, comprehensive setup guide
-7. **Problem Solving**: Troubleshooting hardware compatibility and display issues
+
+## 💡 Technical Notes
+
+### Security
+- Full disk encryption with LUKS
+- Separate boot partition for UEFI
+- LVM for flexible storage management
+- Encrypted backups with SSH key authentication
+
+### Display Server
+- Native Wayland rendering eliminates XWayland scaling issues
+- Electron apps configured for proper fractional scaling
+- Environment variables tuned for high-DPI displays
+
+### System Design
+- systemd-networkd for network management
+- PipeWire for audio
+- systemd timers for scheduled tasks
+- Manual installation process for understanding system architecture
+
 ## 🔍 Hardware Compatibility Notes
+
 - **ACPI Errors**: Resolved with `dmesg -D` during initial boot
 - **Display Scaling**: Configured 1.5x scaling for optimal clarity
 - **Electron App Blur**: Solved with native Wayland environment variables
 - **Graphics**: Mesa drivers for hardware acceleration
 - **Audio**: PipeWire configuration for seamless audio routing
+
 ## 🐛 Common Issues Solved
+
 ### Blurry Electron Apps on Wayland
+
 **Problem**: VS Code, Obsidian, and Discord appeared blurry with fractional scaling (150%)
+
 **Solution**: Configured native Wayland rendering in Hyprland:
 ```bash
 env = ELECTRON_ENABLE_WAYLAND,1
 env = ELECTRON_OZONE_PLATFORM_HINT,wayland
 ```
 This bypasses XWayland compatibility layer and enables proper fractional scaling support.
+
 ## 📚 Resources & Inspiration
+
 - [Arch Linux Wiki](https://wiki.archlinux.org/) - Comprehensive documentation
 - [Typecraft Dotfiles](https://github.com/typecraft-dev/dotfiles) - Configuration inspiration
 - [Catppuccin Theme](https://github.com/catppuccin/catppuccin) - Color scheme
 - [Hyprland Documentation](https://wiki.hyprland.org/) - Wayland compositor configuration
-## 🤝 Usage
-This repository serves as:
-- **Personal reference** for future installations
-- **Learning resource** for others attempting similar setups
-- **Portfolio demonstration** of Linux system administration skills
-- **Troubleshooting guide** for common Arch + Wayland issues
+- [Restic Documentation](https://restic.readthedocs.io/) - Backup solution
+
+## 🤝 About This Repository
+
+Personal documentation of an Arch Linux installation with Hyprland and automated backups.
 
 ## 📦 Dotfiles Management
 
@@ -140,10 +156,35 @@ This repository serves as:
 👉 **[github.com/AhsanRahat12/dotfiles](https://github.com/AhsanRahat12/dotfiles)**
 
 Bootstrap on any fresh machine with a single command:
-
 ```bash
 sh -c "$(curl -fsLS get.chezmoi.io)" -- -b $HOME/.local/bin init --apply git@github.com:AhsanRahat12/dotfiles.git
 ```
+
+---
+
+## 💾 Automated Backup System
+
+Encrypted backup solution using **Restic** with automated nightly backups to QNAP NAS:
+
+- **User backup** (9 PM): `/home/rahat` → 705 GB compressed to 3.3 GB (95% compression)
+- **System backup** (9:30 PM): `/etc` and `/boot` → 262 MB
+- **Retention**: 7 daily, 4 weekly, 12 monthly snapshots
+- **Automation**: systemd timers with persistent catch-up
+- **Security**: AES-256 encryption, SSH key authentication, separate user/root keys
+
+**Quick commands:**
+```bash
+# Check status
+systemctl --user list-timers | grep restic
+
+# Manual backup
+bash /backup/restic/restic-home-backup
+
+# Restore file
+restic restore latest --target /tmp/restore --include /path/to/file
+```
+
+**Scripts:** See [`scripts/backup/`](scripts/backup/) for implementation.
 
 ---
 
